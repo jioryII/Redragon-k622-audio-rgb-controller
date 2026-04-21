@@ -4,11 +4,20 @@ using System.IO;
 
 namespace K622RGBController.Models;
 
+public enum AppLanguage
+{
+    Spanish,
+    English
+}
+
 /// <summary>
 /// Complete application state. Auto-saves to %APPDATA%/K622_RGB/config.json.
 /// </summary>
 public class AppSettings
 {
+    [JsonPropertyName("language")]
+    public AppLanguage Language { get; set; } = AppLanguage.English;
+
     // ── Gradient colors (4 anchor colors) ──
     [JsonPropertyName("gradient_colors")]
     public int[][] GradientColors { get; set; } = new[]

@@ -39,17 +39,33 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
     private bool _startWithWindows;
     private string _deviceName = "No conectado";
 
+    // ── Localization ──
+    public LocalizationManager Loc => LocalizationManager.Instance;
+
     // ── Public Properties ──
     public bool IsRunning
     {
         get => _isRunning;
-        set { _isRunning = value; OnPropertyChanged(); OnPropertyChanged(nameof(ToggleButtonText)); OnPropertyChanged(nameof(IsNotRunning)); }
+        set { _isRunning = value; OnPropertyChanged(); OnPropertyChanged(nameof(ToggleButtonText)); OnPropertyChanged(nameof(IsNotRunning)); OnPropertyChanged(nameof(StatusText)); }
     }
     public bool IsNotRunning => !_isRunning;
-    public string ToggleButtonText => _isRunning ? "⏹ Detener" : "▶ Iniciar";
-    public string StatusText { get => _statusText; set { _statusText = value; OnPropertyChanged(); } }
+    public string ToggleButtonText => _isRunning ? Loc["BtnStop"] : Loc["BtnStart"];
+    public string StatusText 
+    { 
+        get 
+        {
+            if (!_isRunning) return Loc["StatusDisconnected"];
+            if (_statusText.Contains("Error")) return Loc["StatusConnError"];
+            return Loc["StatusConnected"];
+        }
+        set { _statusText = value; OnPropertyChanged(); } 
+    }
     public string FpsText { get => _fpsText; set { _fpsText = value; OnPropertyChanged(); } }
-    public string DeviceName { get => _deviceName; set { _deviceName = value; OnPropertyChanged(); } }
+    public string DeviceName 
+    { 
+        get => _deviceName == "No conectado" || _deviceName == "Not connected" ? Loc["DeviceNone"] : _deviceName; 
+        set { _deviceName = value; OnPropertyChanged(); } 
+    }
 
     public double Brightness
     {
@@ -147,6 +163,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 
     // ── Commands ──
     public RelayCommand ToggleCommand { get; }
+    public RelayCommand ToggleLanguageCommand { get; }
     public RelayCommand TestNotifCommand { get; }
     public RelayCommand QuitCommand { get; }
     
@@ -160,6 +177,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
     public MainViewModel()
     {
         _settings = AppSettings.Load();
+        Loc.CurrentLanguage = _settings.Language;
 
         _hid = new HidController();
         _audio = new AudioAnalyzer();
@@ -198,6 +216,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 
         // Commands
         ToggleCommand = new RelayCommand(ToggleRunning);
+        ToggleLanguageCommand = new RelayCommand(ToggleLanguage);
         TestNotifCommand = new RelayCommand(() => { if (_isRunning) _notif.TriggerNotification(); });
         QuitCommand = new RelayCommand(() => System.Windows.Application.Current?.Shutdown());
         
@@ -209,6 +228,16 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
         _uiTimer.Tick += UiTimerTick;
         
         UpdateColorBrushes();
+    }
+
+    private void ToggleLanguage()
+    {
+        _settings.Language = _settings.Language == AppLanguage.English ? AppLanguage.Spanish : AppLanguage.English;
+        Loc.CurrentLanguage = _settings.Language;
+        OnPropertyChanged(nameof(ToggleButtonText));
+        OnPropertyChanged(nameof(StatusText));
+        OnPropertyChanged(nameof(DeviceName));
+        SaveSettings();
     }
     
     private void UpdateColorBrushes()
