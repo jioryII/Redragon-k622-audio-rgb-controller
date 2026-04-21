@@ -53,39 +53,40 @@ The project leverages several powerful libraries to interact with hardware and p
 
 ---
 
-## 🚀 Instalación y Uso
+## 🚀 Installation & Usage
 
-### Opción 1: Ejecutar versión compilada (Recomendado)
-Para usar la aplicación sin necesidad de compilar el código:
-1. Descarga la carpeta `dist/` de este repositorio o descarga el archivo `K622RGBController.exe`.
-2. Asegúrate de tener instalado [.NET 8.0 Desktop Runtime](https://dotnet.microsoft.com/en-us/download/dotnet/8.0).
-3. Ejecuta `K622RGBController.exe`.
+### Option 1: Run Pre-built Version (Recommended)
+The easiest way to use the application without compiling any code:
 
-### Opción 2: Compilar desde el código fuente
-Si deseas realizar cambios o compilar por tu cuenta, sigue estos pasos:
+1. **[Click here to download K622RGBController.exe](https://github.com/jioryII/Redragon-k622-audio-rgb-controller/raw/main/dist/K622RGBController.exe)**
+2. Ensure you have the [.NET 8.0 Desktop Runtime](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) installed.
+3. Run the executable.
 
-#### Requisitos previos:
-- **Visual Studio 2022** (con la carga de trabajo "Desarrollo de escritorio de .NET") o **VS Code** con el SDK de .NET 8.0 instalado.
-- **Git** (opcional, para clonar).
+### Option 2: Build from Source
+If you want to modify the code or build it yourself, follow these steps:
 
-#### Pasos para compilar:
-1. **Clonar el repositorio:**
+#### Prerequisites:
+- **Visual Studio 2022** (with ".NET desktop development" workload) or **VS Code** with .NET 8.0 SDK.
+- **Git** (optional, for cloning).
+
+#### Build Steps:
+1. **Clone the repository:**
    ```bash
    git clone https://github.com/jioryII/Redragon-k622-audio-rgb-controller.git
    cd Redragon-k622-audio-rgb-controller
    ```
-2. **Restaurar dependencias:**
-   Abre una terminal en la carpeta del proyecto y ejecuta:
+2. **Restore dependencies:**
+   Open a terminal in the project folder and run:
    ```bash
    dotnet restore
    ```
-3. **Compilar y publicar (Crear el ejecutable):**
-   Para generar el archivo `.exe` optimizado en un solo archivo:
+3. **Build and Publish (Create the executable):**
+   To generate a single-file optimized executable:
    ```bash
    dotnet publish K622RGBController/K622RGBController.csproj -c Release -r win-x64 --self-contained false /p:PublishSingleFile=true
    ```
-4. **Localizar el ejecutable:**
-   El archivo generado se encontrará en:
+4. **Locate the executable:**
+   The generated file will be located at:
    `K622RGBController/bin/Release/net8.0-windows/win-x64/publish/K622RGBController.exe`
 
 ---
