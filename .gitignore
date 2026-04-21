@@ -27,13 +27,14 @@ coverage.xml
 
 # Build and Dist
 build/
-dist/
 publish/
 
 # Executables
 *.exe
 *.dll
 *.pdb
+!dist/
+!dist/*.exe
 
 # OS files
 .DS_Store
