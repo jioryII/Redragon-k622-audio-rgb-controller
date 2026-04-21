@@ -1,0 +1,375 @@
+<Window x:Class="K622RGBController.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="K622 RGB Controller"
+        Width="1080" Height="700"
+        MinWidth="900" MinHeight="600"
+        WindowStartupLocation="CenterScreen"
+        Style="{StaticResource MainWindowStyle}"
+        Background="{StaticResource BgMainBrush}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="46"/>
+        </Grid.RowDefinitions>
+
+        <!-- ═══════════ HEADER ═══════════ -->
+        <Border Grid.Row="0" Background="{StaticResource BgHeaderBrush}">
+            <Grid Margin="20,0">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="⌨" FontSize="22" VerticalAlignment="Center" Margin="0,0,8,0"
+                               Foreground="{StaticResource AccentGreenBrush}"/>
+                    <TextBlock Text="K622 RGB" FontSize="20" FontWeight="Bold" VerticalAlignment="Center"
+                               Foreground="{StaticResource TextPrimaryBrush}"/>
+                    <TextBlock Text="  Controller" FontSize="13" VerticalAlignment="Center" Margin="4,3,0,0"
+                               Foreground="{StaticResource TextSecondaryBrush}"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                    <TextBlock Text="{Binding StatusText}" FontSize="12" FontWeight="SemiBold"
+                               VerticalAlignment="Center" Margin="0,0,16,0"
+                               Foreground="{StaticResource AccentGreenBrush}"/>
+                    <Button Content="{Binding ToggleButtonText}" Command="{Binding ToggleCommand}"
+                            Style="{StaticResource AccentButton}" Padding="20,8" FontSize="14"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- ═══════════ MAIN CONTENT ═══════════ -->
+        <Grid Grid.Row="1" Margin="16,16,16,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="360"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- ─── LEFT: Settings Panel ─── -->
+            <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto" Margin="0,0,12,0">
+                <StackPanel>
+
+                    <!-- TAB CONTROL -->
+                    <TabControl x:Name="SettingsTabs">
+                        
+                        <!-- ═══ TAB: Música ═══ -->
+                        <TabItem Header="🎵 Música">
+                            <StackPanel Margin="0,12,0,0">
+                                
+                                <TextBlock Text="Visualizador de Espectro" Style="{StaticResource HeaderLabel}"/>
+                                <TextBlock Text="Frecuencias del audio mapeadas al teclado con dirección configurable" Style="{StaticResource SubLabel}"/>
+
+                                <!-- Dirección (Ángulo) -->
+                                <Border Style="{StaticResource CardStyle}">
+                                    <StackPanel>
+                                        <TextBlock Text="Dirección del espectro" Style="{StaticResource FieldLabel}" Margin="0,0,0,8"/>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="50"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Slider Value="{Binding Angle, Mode=TwoWay}" Minimum="0" Maximum="360"
+                                                    TickFrequency="15" IsSnapToTickEnabled="True"/>
+                                            <TextBlock Grid.Column="1" Text="{Binding AngleText}" Style="{StaticResource ValueLabel}"/>
+                                        </Grid>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- Audio Sliders -->
+                                <Border Style="{StaticResource CardStyle}">
+                                    <StackPanel>
+                                        <TextBlock Text="Ajustes de audio" Style="{StaticResource FieldLabel}" Margin="0,0,0,10"/>
+
+                                        <!-- Sensibilidad -->
+                                        <Grid Margin="0,0,0,8">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="100"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="45"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="Sensibilidad" Style="{StaticResource FieldLabel}"/>
+                                            <Slider Grid.Column="1" Value="{Binding Sensitivity, Mode=TwoWay}" 
+                                                    Minimum="0.1" Maximum="3.0" SmallChange="0.1" LargeChange="0.5"/>
+                                            <TextBlock Grid.Column="2" Text="{Binding SensitivityText}" Style="{StaticResource ValueLabel}"/>
+                                        </Grid>
+
+                                        <!-- Suavizado -->
+                                        <Grid Margin="0,0,0,8">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="100"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="45"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="Suavizado" Style="{StaticResource FieldLabel}"/>
+                                            <Slider Grid.Column="1" Value="{Binding Smoothing, Mode=TwoWay}" 
+                                                    Minimum="0" Maximum="0.9" SmallChange="0.05"/>
+                                            <TextBlock Grid.Column="2" Text="{Binding SmoothingText}" Style="{StaticResource ValueLabel}"/>
+                                        </Grid>
+
+                                        <!-- Caída de barras -->
+                                        <Grid Margin="0,0,0,8">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="100"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="45"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="Caída barras" Style="{StaticResource FieldLabel}"/>
+                                            <Slider Grid.Column="1" Value="{Binding BarDecay, Mode=TwoWay}" 
+                                                    Minimum="0.1" Maximum="0.95" SmallChange="0.05"
+                                                    Foreground="{StaticResource AccentOrangeBrush}"/>
+                                            <TextBlock Grid.Column="2" Text="{Binding BarDecayText}" Style="{StaticResource ValueLabel}"
+                                                       Foreground="{StaticResource AccentOrangeBrush}"/>
+                                        </Grid>
+
+                                        <!-- Fluidez -->
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="100"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="45"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="Fluidez" Style="{StaticResource FieldLabel}"/>
+                                            <Slider Grid.Column="1" Value="{Binding Fluidity, Mode=TwoWay}" 
+                                                    Minimum="0" Maximum="1" SmallChange="0.05"
+                                                    Foreground="{StaticResource AccentOrangeBrush}"/>
+                                            <TextBlock Grid.Column="2" Text="{Binding FluidityText}" Style="{StaticResource ValueLabel}"
+                                                       Foreground="{StaticResource AccentOrangeBrush}"/>
+                                        </Grid>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- Colores del Visualizador -->
+                                <Border Style="{StaticResource CardStyle}">
+                                    <StackPanel>
+                                        <TextBlock Text="Colores del Espectro" Style="{StaticResource FieldLabel}" Margin="0,0,0,10"/>
+                                        <UniformGrid Columns="4" Margin="0,4,0,4" HorizontalAlignment="Stretch">
+                                            <Button Command="{Binding EditGradientColorCommand}" CommandParameter="0" 
+                                                    Background="{Binding GradientBrushes[0]}" Height="32" Margin="4" 
+                                                    ToolTip="Editar Color 1" BorderBrush="#33ffffff" BorderThickness="1"/>
+                                            <Button Command="{Binding EditGradientColorCommand}" CommandParameter="1" 
+                                                    Background="{Binding GradientBrushes[1]}" Height="32" Margin="4" 
+                                                    ToolTip="Editar Color 2" BorderBrush="#33ffffff" BorderThickness="1"/>
+                                            <Button Command="{Binding EditGradientColorCommand}" CommandParameter="2" 
+                                                    Background="{Binding GradientBrushes[2]}" Height="32" Margin="4" 
+                                                    ToolTip="Editar Color 3" BorderBrush="#33ffffff" BorderThickness="1"/>
+                                            <Button Command="{Binding EditGradientColorCommand}" CommandParameter="3" 
+                                                    Background="{Binding GradientBrushes[3]}" Height="32" Margin="4" 
+                                                    ToolTip="Editar Color 4" BorderBrush="#33ffffff" BorderThickness="1"/>
+                                        </UniformGrid>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- Modo Reposo (Idle Mode) -->
+                                <Border Style="{StaticResource CardStyle}">
+                                    <StackPanel>
+                                        <TextBlock Text="Modo Reposo (Idle)" Style="{StaticResource FieldLabel}" Margin="0,0,0,10"/>
+                                        <CheckBox Content="  Habiliar manchas relajantes sin audio" 
+                                                  IsChecked="{Binding IdleEnabled}"
+                                                  Style="{StaticResource ModernCheckBox}" Margin="0,0,0,12"/>
+                                                  
+                                        <Grid Margin="0,0,0,8" IsEnabled="{Binding IdleEnabled}">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="100"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="45"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="Intensidad" Style="{StaticResource FieldLabel}"/>
+                                            <Slider Grid.Column="1" Value="{Binding IdleIntensity, Mode=TwoWay}" 
+                                                    Minimum="0.1" Maximum="1.0" SmallChange="0.1"/>
+                                            <TextBlock Grid.Column="2" Text="{Binding IdleIntensity, StringFormat={}{0:F2}}" Style="{StaticResource ValueLabel}"/>
+                                        </Grid>
+
+                                        <Grid Margin="0,0,0,12" IsEnabled="{Binding IdleEnabled}">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="100"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="45"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="Velocidad" Style="{StaticResource FieldLabel}"/>
+                                            <Slider Grid.Column="1" Value="{Binding IdleSpeed, Mode=TwoWay}" 
+                                                    Minimum="0.1" Maximum="2.0" SmallChange="0.1"/>
+                                            <TextBlock Grid.Column="2" Text="{Binding IdleSpeed, StringFormat={}{0:F2}}" Style="{StaticResource ValueLabel}"/>
+                                        </Grid>
+
+                                        <TextBlock Text="Colores del Reposo" Style="{StaticResource FieldLabel}" Margin="0,0,0,8" IsEnabled="{Binding IdleEnabled}"/>
+                                        <UniformGrid Columns="4" Margin="0,4,0,4" HorizontalAlignment="Stretch" IsEnabled="{Binding IdleEnabled}">
+                                            <Button Command="{Binding EditIdleColorCommand}" CommandParameter="0" 
+                                                    Background="{Binding IdleBrushes[0]}" Height="24" Margin="4" 
+                                                    ToolTip="Editar Color Idle 1" BorderBrush="#33ffffff" BorderThickness="1"/>
+                                            <Button Command="{Binding EditIdleColorCommand}" CommandParameter="1" 
+                                                    Background="{Binding IdleBrushes[1]}" Height="24" Margin="4" 
+                                                    ToolTip="Editar Color Idle 2" BorderBrush="#33ffffff" BorderThickness="1"/>
+                                            <Button Command="{Binding EditIdleColorCommand}" CommandParameter="2" 
+                                                    Background="{Binding IdleBrushes[2]}" Height="24" Margin="4" 
+                                                    ToolTip="Editar Color Idle 3" BorderBrush="#33ffffff" BorderThickness="1"/>
+                                            <Button Command="{Binding EditIdleColorCommand}" CommandParameter="3" 
+                                                    Background="{Binding IdleBrushes[3]}" Height="24" Margin="4" 
+                                                    ToolTip="Editar Color Idle 4" BorderBrush="#33ffffff" BorderThickness="1"/>
+                                        </UniformGrid>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- Level Meters -->
+                                <Border Style="{StaticResource CardStyle}">
+                                    <StackPanel>
+                                        <TextBlock Text="Niveles en tiempo real" Style="{StaticResource FieldLabel}" Margin="0,0,0,10"/>
+                                        
+                                        <Grid Margin="0,0,0,6">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="50"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="Bass" Foreground="{StaticResource TextSecondaryBrush}" FontSize="11"/>
+                                            <ProgressBar Grid.Column="1" Value="{Binding BassLevel}" Style="{StaticResource MeterBar}"
+                                                         Foreground="#00ff41"/>
+                                        </Grid>
+
+                                        <Grid Margin="0,0,0,6">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="50"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="Mids" Foreground="{StaticResource TextSecondaryBrush}" FontSize="11"/>
+                                            <ProgressBar Grid.Column="1" Value="{Binding MidsLevel}" Style="{StaticResource MeterBar}"
+                                                         Foreground="#ffdd00"/>
+                                        </Grid>
+
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="50"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="Treble" Foreground="{StaticResource TextSecondaryBrush}" FontSize="11"/>
+                                            <ProgressBar Grid.Column="1" Value="{Binding TrebleLevel}" Style="{StaticResource MeterBar}"
+                                                         Foreground="#ff003c"/>
+                                        </Grid>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </TabItem>
+
+                        <!-- ═══ TAB: Notificaciones ═══ -->
+                        <TabItem Header="🔔 Notif.">
+                            <StackPanel Margin="0,12,0,0">
+                                
+                                <TextBlock Text="Notificaciones del Sistema" Style="{StaticResource HeaderLabel}"/>
+                                <TextBlock Text="Parpadeo en el teclado al recibir notificaciones de Windows" Style="{StaticResource SubLabel}"/>
+
+                                <Border Style="{StaticResource CardStyle}">
+                                    <StackPanel>
+                                        <CheckBox Content="  Habilitar parpadeo en notificaciones" 
+                                                  IsChecked="{Binding NotifEnabled}"
+                                                  Style="{StaticResource ModernCheckBox}" Margin="0,0,0,12"/>
+
+                                        <Grid Margin="0,0,0,8">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="100"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="45"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="Duración" Style="{StaticResource FieldLabel}"/>
+                                            <Slider Grid.Column="1" Value="{Binding NotifDuration, Mode=TwoWay}"
+                                                    Minimum="1" Maximum="10" SmallChange="0.5"
+                                                    Foreground="{StaticResource AccentOrangeBrush}"/>
+                                            <TextBlock Grid.Column="2" Text="{Binding NotifDurationText}" Style="{StaticResource ValueLabel}"
+                                                       Foreground="{StaticResource AccentOrangeBrush}"/>
+                                        </Grid>
+
+                                        <Grid Margin="0,0,0,12">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="100"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="45"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="Intensidad" Style="{StaticResource FieldLabel}"/>
+                                            <Slider Grid.Column="1" Value="{Binding NotifIntensity, Mode=TwoWay}"
+                                                    Minimum="0.1" Maximum="1" SmallChange="0.05"
+                                                    Foreground="{StaticResource AccentOrangeBrush}"/>
+                                            <TextBlock Grid.Column="2" Text="{Binding NotifIntensityText}" Style="{StaticResource ValueLabel}"
+                                                       Foreground="{StaticResource AccentOrangeBrush}"/>
+                                        </Grid>
+
+                                        <Button Content="⚡ Probar Parpadeo" Command="{Binding TestNotifCommand}"
+                                                Style="{StaticResource ModernButton}" Padding="12,8"
+                                                Foreground="{StaticResource AccentOrangeBrush}" HorizontalAlignment="Stretch"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <Border Style="{StaticResource CardStyle}">
+                                    <TextBlock TextWrapping="Wrap" Foreground="{StaticResource TextSecondaryBrush}" FontSize="12"
+                                               Text="Cuando Windows muestra una notificación, el teclado realizará un parpadeo suave con una onda diagonal. Tiene prioridad sobre el visualizador de música."/>
+                                </Border>
+                            </StackPanel>
+                        </TabItem>
+
+                        <!-- ═══ TAB: Ajustes ═══ -->
+                        <TabItem Header="⚙ Ajustes">
+                            <StackPanel Margin="0,12,0,0">
+                                
+                                <TextBlock Text="Configuración General" Style="{StaticResource HeaderLabel}"/>
+                                <TextBlock Text="Comportamiento de la aplicación" Style="{StaticResource SubLabel}"/>
+
+                                <Border Style="{StaticResource CardStyle}">
+                                    <StackPanel>
+                                        <CheckBox Content="  Iniciar con Windows (en segundo plano)"
+                                                  IsChecked="{Binding StartWithWindows}"
+                                                  Style="{StaticResource ModernCheckBox}" Margin="0,0,0,12"/>
+
+                                        <TextBlock TextWrapping="Wrap" Foreground="{StaticResource TextSecondaryBrush}" FontSize="11"
+                                                   Text="La aplicación se iniciará automáticamente con Windows y se mantendrá en el área de iconos ocultos de la barra de tareas."/>
+                                    </StackPanel>
+                                </Border>
+
+                                <Border Style="{StaticResource CardStyle}">
+                                    <StackPanel>
+                                        <TextBlock Text="Dispositivo" Style="{StaticResource FieldLabel}" Margin="0,0,0,6"/>
+                                        <TextBlock Text="{Binding DeviceName}" Foreground="{StaticResource AccentGreenBrush}" FontSize="12"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <Border Style="{StaticResource CardStyle}">
+                                    <StackPanel>
+                                        <TextBlock Text="Acerca de" Style="{StaticResource FieldLabel}" Margin="0,0,0,6"/>
+                                        <TextBlock Text="K622 RGB Controller v2.0" Foreground="{StaticResource TextSecondaryBrush}" FontSize="11"/>
+                                        <TextBlock Text="Redragon Horus TKL K622" Foreground="{StaticResource TextSecondaryBrush}" FontSize="11"/>
+                                        <TextBlock Text="Protocolo Sinowealth HID" Foreground="{StaticResource TextSecondaryBrush}" FontSize="11"/>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </TabItem>
+                    </TabControl>
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- ─── RIGHT: Keyboard Preview ─── -->
+            <Border Grid.Column="1" Style="{StaticResource CardStyle}" Margin="0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="Vista previa del teclado" Style="{StaticResource FieldLabel}" 
+                               Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,8"/>
+                    <Canvas x:Name="KeyboardCanvas" Grid.Row="1" ClipToBounds="True"/>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <!-- ═══════════ FOOTER ═══════════ -->
+        <Border Grid.Row="2" Background="{StaticResource BgHeaderBrush}">
+            <Grid Margin="20,0">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="☀ Brillo:" Foreground="{StaticResource TextSecondaryBrush}" 
+                               VerticalAlignment="Center" Margin="0,0,8,0" FontSize="12"/>
+                    <Slider Value="{Binding Brightness, Mode=TwoWay}" Minimum="0" Maximum="1"
+                            Width="140" VerticalAlignment="Center" SmallChange="0.05"/>
+                    <TextBlock Text="{Binding BrightnessText}" Foreground="{StaticResource TextPrimaryBrush}"
+                               VerticalAlignment="Center" Margin="8,0,0,0" FontSize="12"/>
+                </StackPanel>
+
+                <TextBlock Text="{Binding FpsText}" Foreground="{StaticResource TextSecondaryBrush}"
+                           HorizontalAlignment="Right" VerticalAlignment="Center"
+                           FontFamily="Consolas" FontSize="12"/>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

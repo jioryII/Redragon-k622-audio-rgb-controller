@@ -1,0 +1,55 @@
+# .NET / Visual Studio
+[Bb]in/
+[Oo]bj/
+*.user
+*.userosscache
+*.sln.docstates
+
+# Python artifacts
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+pip-log.txt
+pip-delete-this-directory.txt
+.tox/
+.coverage
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+.mypy_cache/
+.pytest_cache/
+
+# Build and Dist
+build/
+dist/
+publish/
+
+# Executables
+*.exe
+*.dll
+*.pdb
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Project specific exclusions (Python version)
+/core/
+/gui/
+main.py
+requirements.txt
+build.bat
+build_csharp.bat
+check_syntax.py
+diag_audio.py
+diag_audio_levels.py
+diag_wasapi.py
+installer.iss
+K622_RGB_Controller.spec
+logo_teclado.png
